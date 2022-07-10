@@ -1,0 +1,8 @@
+.DS_Store
+node_modules
+app
+dist
+.Main/**/*.js
+.Main/**/*.map
+main/.Main
+.Render

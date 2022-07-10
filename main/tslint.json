@@ -1,0 +1,64 @@
+{
+  "extends": "tslint:latest",
+  "rulesDirectory": ["./node_modules/tslint-microsoft-contrib"],
+  "linterOptions": {
+    "exclude": [
+      "types/**/*",
+      "node_modules/**/*"
+    ]
+  },
+  "rules": {
+    "align": [true, "parameters", "statements"],
+    "arrow-parens": false,
+    "comment-format": [true, "check-space"],
+    "max-classes-per-file": false,
+    "member-access": false,
+    "member-ordering": [true, "static-before-instance"],
+    "no-consecutive-blank-lines": true,
+    "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
+    "no-implicit-dependencies": false,
+    "no-object-literal-type-assertion": false,
+    "no-string-literal": false,
+    "no-submodule-imports": false,
+    "no-this-assignment": false,
+    "no-var-requires": false,
+    "object-literal-key-quotes": false,
+    "object-literal-sort-keys": false,
+    "only-arrow-functions": false,
+    "ordered-imports": false,
+    "prefer-conditional-expression": false,
+    "space-before-function-paren": false,
+    "quotemark": [true, "single", "jsx-double", "avoid-escape"],
+    "semicolon": [true, "never"],
+    "trailing-comma": [
+     false
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "space",
+        "index-signature": "space",
+        "parameter": "space",
+        "property-declaration": "space",
+        "variable-declaration": "space"
+      }
+    ],
+    "variable-name": [true, "ban-keywords"],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-module",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ]
+  }
+}

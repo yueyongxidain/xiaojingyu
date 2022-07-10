@@ -1,0 +1,230 @@
+.upload {
+  .actions {
+    display: none;
+
+    .icon {
+      display: inline-block;
+      margin: 0 12px;
+      cursor: pointer;
+    }
+  }
+
+  .speed {
+    color: rgb(62, 145, 247);
+  }
+
+  .filter {
+    display: flex;
+
+    > div {
+      margin: 10px 20px;
+    }
+
+    .select {
+      width: 160px;
+      margin: 0 4px;
+    }
+  }
+
+  .body {
+    margin: 0 14px;
+    height: calc(100vh - 116px);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background-color: #fff;
+    padding: 12px;
+    padding-top: 0px;
+
+    .progress {
+      padding: 0 12px;
+    }
+
+    .ant-checkbox-group {
+      display: block;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      padding-left: 4px;
+    }
+
+    .deleting {
+      background-color: #f38361be !important;
+    }
+
+    .task {
+      display: flex;
+      background-color: transparent;
+      flex-direction: row;
+      position: relative;
+      align-items: center;
+      margin: 12px 0;
+      margin-top: 4px;
+      padding: 12px 12px;
+      z-index: 1;
+
+      .checkBox {
+        height: 100%;
+        vertical-align: middle;
+        text-align: left;
+        width: 30px;
+      }
+
+      .title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .content {
+        flex: 1;
+
+        .oreType {
+          color: #fff;
+          font-size: 12px;
+          padding: 0 8px;
+          border-radius: 8px 0px 8px 0px;
+        }
+
+        .taskName {
+          font-size: 16px;
+          font-weight: 500;
+          color: #2d3b5a;
+          display: inline-block;
+          margin: 0 4px;
+        }
+
+        .taskIntegrated {
+          font-size: 12px;
+          font-weight: 400;
+          color: #ea7b13;
+          background: rgba(234, 123, 19, 0.15);
+          border-radius: 2px;
+          border: 1px solid #ea7b13;
+          vertical-align: text-bottom;
+          padding: 0 4px;
+          margin: 0 4px;
+        }
+
+        .taskIsEvidence {
+          font-size: 12px;
+          font-weight: 400;
+          color: #42c8a6;
+          background: rgba(66, 200, 166, 0.15);
+          border-radius: 2px;
+          border: 1px solid #42c8a6;
+          vertical-align: text-bottom;
+          padding: 0 4px;
+          margin: 0 4px;
+        }
+      }
+    }
+
+    .taskTitle {
+      height: 38px;
+      line-height: 38px;
+      display: flex;
+      background-color: transparent;
+      justify-content: space-between;
+      flex-direction: row;
+      position: relative;
+      align-items: center;
+      margin: 0;
+      padding: 0 16px;
+      padding-right: 4px;
+      z-index: 1;
+
+      .select-checkBox {
+        flex: 1;
+
+        .checkBox {
+          height: 100%;
+          vertical-align: middle;
+          text-align: left;
+          width: 30px;
+          display: inline-block;
+        }
+      }
+
+      .select-action {
+        button {
+          margin-left: 12px;
+        }
+      }
+    }
+
+    .task::after {
+      content: '';
+      background-color: rgba(245, 246, 250, 1);
+      filter: blur(2px);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+
+    .task:hover {
+      box-shadow: 0px 0px 5px rgba(133, 133, 136, 0.5);
+
+      .taskName {
+        color: rgba(3, 60, 255, 1);
+      }
+
+      .actions {
+        display: inline-block;
+      }
+    }
+
+    .ant-result-title {
+      font-size: 20px;
+    }
+
+    .ant-result-subtitle {
+      font-size: 12px;
+    }
+  }
+}
+
+.link {
+  font-size: 14px;
+  color: #033cff;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.taskDrawer {
+  .ant-drawer-content-wrapper {
+    max-width: 640px;
+    margin: 0 calc(calc(100% - 640px) / 2);
+    overflow-x: hidden;
+  }
+
+  .ant-drawer-header {
+    border-bottom: 0;
+  }
+
+  .ant-form-item {
+    margin-bottom: 12px;
+  }
+
+  .action {
+    vertical-align: text-bottom;
+  }
+
+  .footer {
+    border-top: 1px solid rgba(232, 233, 238, 1);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 8px 16px;
+    background: #fff;
+    text-align: center;
+
+    button {
+      margin-right: 12px;
+    }
+  }
+}

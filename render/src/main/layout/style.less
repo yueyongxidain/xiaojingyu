@@ -1,0 +1,52 @@
+@import '../../color.less';
+@border: #e5e6ea;
+@titleBarIconsWidth: 76px;
+@appHeaderHeight: 50px;
+
+.app {
+  height: 100%;
+
+  .app-content {
+    height: calc(100vh - @appHeaderHeight);
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+
+    .app-menu-0 {
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: @titleBarIconsWidth;
+      height: 100%;
+      box-shadow: 2px 0px 5px @shadowColor;
+
+      .app-menu-item {
+        text-align: center;
+        height: @titleBarIconsWidth;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 400;
+
+        .app-menu-item-icon {
+          display: block;
+          height: 36px;
+          width: 36px;
+          padding: 0;
+          margin: 6px auto;
+        }
+      }
+
+      .app-menu-item-selected {
+        color: @majorColor;
+      }
+    }
+
+    .app-body {
+      flex: 1;
+      height: 100%;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+  }
+}

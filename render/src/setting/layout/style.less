@@ -1,0 +1,53 @@
+@border: #e5e6ea;
+@menuWidth: 76px;
+@menuHeight: 32px;
+@appHeaderHeight: 50px;
+
+.app {
+  height: 100%;
+
+  .app-content {
+    height: 100vh;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+
+    .app-menu-0 {
+      padding: 12px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: @menuWidth;
+      height: 100%;
+      box-shadow: 2px 0px 5px #eeeeee;
+
+      .app-menu-item {
+        text-align: center;
+        height: @menuHeight;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .app-menu-item-selected {
+        color: #3366cc;
+      }
+    }
+
+    .app-body {
+      flex: 1;
+      height: 100%;
+      padding: 12px;
+    }
+
+    .app-footer {
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50% + 36px);
+      text-align: center;
+      color: rgb(141, 141, 141);
+    }
+  }
+}

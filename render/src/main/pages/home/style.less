@@ -1,0 +1,128 @@
+@import '../../../color.less';
+
+.home {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+
+  .home-title {
+    margin: 24px;
+    color: rgb(165, 164, 164);
+    font-size: 18px;
+  }
+
+  .home-card {
+    flex: 1;
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: center;
+
+    > * {
+      margin: 8px;
+    }
+
+    .home-card-supreAnt {
+      width: 50%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: 0px 0px 18px @shadowColor;
+      padding: 12px;
+
+      &:hover {
+        box-shadow: 0px 0px 18px @shadowMajorColor;
+      }
+
+      .home-card-supreAnt-logo {
+        background-image: url(../../../../assets/logo.png);
+        background-size: 100% 100%;
+        margin: 4px;
+        width: 80px;
+        height: 80px;
+      }
+
+      .home-card-supreAnt-desc {
+        flex: 1;
+        color: rgb(104, 104, 104);
+        font-size: 14px;
+        line-height: 32px;
+        font-family: cursive;
+      }
+    }
+
+    .home-card-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      > * {
+        flex: 1;
+      }
+
+      .home-card-atwork {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 18px @shadowColor;
+        padding: 12px;
+
+        &:hover {
+          box-shadow: 0px 0px 18px @shadowMajorColor;
+        }
+
+        .home-card-atwork-logo {
+          background-image: url(../../../../assets/atwork.svg);
+          background-size: 100% 100%;
+          margin: 4px;
+          width: 80px;
+          height: 80px;
+        }
+
+        .home-card-atwork-desc {
+          color: rgb(75, 75, 75);
+          font-size: 14px;
+          line-height: 32px;
+          font-family: cursive;
+        }
+      }
+
+      .home-card-event_export {
+        height: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        border-radius: 8px;
+        box-shadow: 0px 0px 18px @shadowColor;
+        padding: 12px;
+
+        &:hover {
+          box-shadow: 0px 0px 18px @shadowMajorColor;
+        }
+
+        .home-card-event_export-logo {
+          background-image: url(../../../../assets/event_export.svg);
+          background-size: 100% 100%;
+          margin: 4px;
+          width: 80px;
+          height: 80px;
+        }
+
+        .home-card-event_export-desc {
+          color: rgb(75, 75, 75);
+          font-size: 14px;
+          line-height: 32px;
+          font-family: cursive;
+        }
+      }
+    }
+  }
+}
