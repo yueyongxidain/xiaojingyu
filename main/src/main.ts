@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, Menu } from 'electron'
 import * as _ from 'lodash'
 import { createMainWindow } from './window/main'
 global.config = {
@@ -7,6 +7,9 @@ global.config = {
     'ignore-certificate-errors': true
   }
 }
+
+const isMac = process.platform === 'darwin'
+
 class SupreAntApp {
   powerBlockerId: number
   public init() {
@@ -14,6 +17,7 @@ class SupreAntApp {
     this.singleton()
     this.registeWindow()
     this.registeCommandLine()
+    this.registeMenu()
   }
 
   /**
@@ -40,7 +44,6 @@ class SupreAntApp {
       }
     })
   }
-
 
   /**
    * 更具用户处于不同的状态创建不同的窗口
@@ -70,6 +73,54 @@ class SupreAntApp {
         }
       }
     }
+  }
+
+  /**
+   * 菜单设置
+   */
+  private registeMenu() {
+    const template = [
+      // { role: 'appMenu' }
+      ...(isMac
+        ? [
+            {
+              label: app.name,
+              submenu: [
+                { role: 'about', label: '关于' },
+                { type: 'separator' },
+                { role: 'hide', label: '隐藏' },
+                { type: 'separator' },
+                { role: 'quit', label: '退出' }
+              ]
+            }
+          ]
+        : []),
+      // { role: 'fileMenu' }
+      {
+        label: '文件',
+        submenu: [
+          { label: '打开' },
+          { type: 'separator' },
+          { label: '保存' },
+          { type: 'separator' },
+          { label: '数据导出' }
+        ]
+      },
+      {
+        role: 'help',
+        submenu: [
+          {
+            label: 'Learn More',
+            click: async () => {
+              const { shell } = require('electron')
+              await shell.openExternal('https://electronjs.org')
+            }
+          }
+        ]
+      }
+    ]
+    const menu = Menu.buildFromTemplate(template as any)
+    Menu.setApplicationMenu(menu)
   }
 }
 const supreAnt = new SupreAntApp()

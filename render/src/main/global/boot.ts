@@ -1,7 +1,5 @@
 import { intercept } from '../../utils/fetch'
-// import { getProjects, getDataTypes } from './api'
 const bootstrap = async () => {
-  console.log(111,window.require)
   try {
     intercept({
       onResponse: (res) => {
@@ -11,15 +9,6 @@ const bootstrap = async () => {
         return res
       }
     })
-    // if (store.get('userInfo.idtoken')) {
-    //   // 查询所有的客户以及项目
-    //   const allProjectRes = await getProjects()
-    //   // 查询所有的数据类型
-    //   const allDataTypeRes = await getDataTypes()
-    //   store.set('allProject', allProjectRes.data.items)
-    //   store.set('allDataType', allDataTypeRes.data.items)
-    //   // 检查上传和下载
-    // }
   } catch (err) {
     console.log(err.message)
   }
