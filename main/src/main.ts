@@ -1,4 +1,4 @@
-import { app, Menu } from 'electron'
+import { app, Menu, dialog } from 'electron'
 import * as _ from 'lodash'
 import { createMainWindow } from './window/main'
 global.config = {
@@ -99,11 +99,11 @@ class SupreAntApp {
       {
         label: '文件',
         submenu: [
-          { label: '打开' },
+          { label: '打开', click: this.openFile },
           { type: 'separator' },
-          { label: '保存' },
+          { label: '保存', click: this.saveFile },
           { type: 'separator' },
-          { label: '数据导出' }
+          { label: '数据导出', click: this.saveAs }
         ]
       },
       {
@@ -121,6 +121,23 @@ class SupreAntApp {
     ]
     const menu = Menu.buildFromTemplate(template as any)
     Menu.setApplicationMenu(menu)
+  }
+
+  private async openFile() {
+    const filePaths = await dialog.showOpenDialog(global.mainWindow, {
+      title: '选择数据文件',
+      filters: [{ name: 'txt/csv', extensions: ['txt', 'csv'] }],
+      properties: ['openFile']
+    })
+    return filePaths
+  }
+
+  private saveFile() {
+    console.log('保存文件')
+  }
+
+  private saveAs() {
+    console.log('另存为')
   }
 }
 const supreAnt = new SupreAntApp()
