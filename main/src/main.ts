@@ -1,5 +1,7 @@
-import { app, Menu, dialog } from 'electron'
+import { app, Menu } from 'electron'
+import { FileCenter } from './fileCenter'
 import * as _ from 'lodash'
+import { GlobalMenu } from './menu'
 import { createMainWindow } from './window/main'
 global.config = {
   COMMAND_LINE: {
@@ -7,8 +9,6 @@ global.config = {
     'ignore-certificate-errors': true
   }
 }
-
-const isMac = process.platform === 'darwin'
 
 class SupreAntApp {
   powerBlockerId: number
@@ -18,6 +18,7 @@ class SupreAntApp {
     this.registeWindow()
     this.registeCommandLine()
     this.registeMenu()
+    this.registeFileCenter()
   }
 
   /**
@@ -75,69 +76,16 @@ class SupreAntApp {
     }
   }
 
+  private registeFileCenter() {
+    global.fileCenter = new FileCenter()
+  }
+
   /**
    * 菜单设置
    */
   private registeMenu() {
-    const template = [
-      // { role: 'appMenu' }
-      ...(isMac
-        ? [
-            {
-              label: app.name,
-              submenu: [
-                { role: 'about', label: '关于' },
-                { type: 'separator' },
-                { role: 'hide', label: '隐藏' },
-                { type: 'separator' },
-                { role: 'quit', label: '退出' }
-              ]
-            }
-          ]
-        : []),
-      // { role: 'fileMenu' }
-      {
-        label: '文件',
-        submenu: [
-          { label: '打开', click: this.openFile },
-          { type: 'separator' },
-          { label: '保存', click: this.saveFile },
-          { type: 'separator' },
-          { label: '数据导出', click: this.saveAs }
-        ]
-      },
-      {
-        role: 'help',
-        submenu: [
-          {
-            label: 'Learn More',
-            click: async () => {
-              const { shell } = require('electron')
-              await shell.openExternal('https://electronjs.org')
-            }
-          }
-        ]
-      }
-    ]
-    const menu = Menu.buildFromTemplate(template as any)
-    Menu.setApplicationMenu(menu)
-  }
-
-  private async openFile() {
-    const filePaths = await dialog.showOpenDialog(global.mainWindow, {
-      title: '选择数据文件',
-      filters: [{ name: 'txt/csv', extensions: ['txt', 'csv'] }],
-      properties: ['openFile']
-    })
-    return filePaths
-  }
-
-  private saveFile() {
-    console.log('保存文件')
-  }
-
-  private saveAs() {
-    console.log('另存为')
+    const globalMenu = new GlobalMenu()
+    Menu.setApplicationMenu(globalMenu.instance)
   }
 }
 const supreAnt = new SupreAntApp()

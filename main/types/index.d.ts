@@ -28,6 +28,7 @@ declare module NodeJS {
     anter: any
     config: any
     syncDataer: any
+    fileCenter: any
   }
 }
 
