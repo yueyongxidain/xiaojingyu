@@ -20,6 +20,7 @@ declare module '*.json' {
 }
 interface Window {
   require: NodeRequire
+  electronAPI: any
 }
 declare module "*.svg" {
   const value: any;

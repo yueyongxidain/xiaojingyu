@@ -5,6 +5,7 @@ import AppHeader from './components/header'
 import Home from 'main/pages/home'
 
 class AppLayout extends React.Component<any, any> {
+ 
   render() {
     return (
       <div className="app">
