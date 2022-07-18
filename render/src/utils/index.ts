@@ -3,7 +3,7 @@ const fs = window.require('fs')
 const path = window.require('path')
 import { downloadVersionFile } from 'main/global/api'
 import { parse } from 'yamljs'
-import { ceil, toNumber, trim, isEmpty, isUndefined } from 'lodash'
+import { ceil, toNumber, trim } from 'lodash'
 import * as moment from 'moment'
 import * as semver from 'semver'
 const { exec } = window.require('child_process')
