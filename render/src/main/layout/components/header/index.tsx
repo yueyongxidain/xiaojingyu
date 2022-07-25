@@ -21,7 +21,7 @@ class AppHeader extends React.Component<
       <div className="app-header">
         <div></div>
         <div className="app-header-right">
-         <div ><span>当前光标位置:</span> <span>X:</span> <span>Y:</span> <span>深度:</span><span>定位精度:</span></div>
+       
         </div>
       </div>
     )
