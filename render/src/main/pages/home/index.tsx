@@ -5,24 +5,36 @@ import * as echarts from "echarts";
 import wgs, { translate } from "utils/wgs";
 import { isUndefined } from "lodash";
 import keydown, { Keys } from 'react-keydown';
-import Circle from 'zrender/lib/graphic/shape/Circle'
+// import Circle from 'zrender/lib/graphic/shape/Circle'
 import Line from 'zrender/lib/graphic/shape/Line'
+import Path from 'zrender/lib/graphic/Path'
+import * as path from 'zrender/lib/tool/path'
 
 const { RIGHT, LEFT } = Keys
-
-class Home extends React.PureComponent<any, any> {
+interface IState {
+  lineChartASelectedIndex: number,
+  lineChartBSelectedIndex: number,
+  scatterChartAelectedIndex: number,
+  dataSource: number[],
+  mode: 'pencil' | 'dot'
+}
+class Home extends React.PureComponent<any, IState> {
   private lineChartA;
   private lineChartB;
   private scatterChartA
   private painting = false;
   private zender
   private dataArray = new Array(0)
+  private pencile
   private lastPoint = { x: undefined, y: undefined };
+  private pencilTmp = []
+  private pencilLine = []
   state = {
     lineChartASelectedIndex: 0,
     lineChartBSelectedIndex: 0,
     scatterChartAelectedIndex: 0,
-    dataSource: []
+    dataSource: [],
+    mode: undefined
   }
   componentDidMount(): void {
     window.electronAPI.onPositions((_event, value) => {
@@ -84,20 +96,21 @@ class Home extends React.PureComponent<any, any> {
       ],
       toolbox: {
         feature: {
-            myTool1: {
-                show: true,
-                title: '画笔',
-                icon: 'path://M432.45,595.444c0,2.177-4.661,6.82-11.305,6.82c-6.475,0-11.306-4.567-11.306-6.82s4.852-6.812,11.306-6.812C427.841,588.632,432.452,593.191,432.45,595.444L432.45,595.444z M421.155,589.876c-3.009,0-5.448,2.495-5.448,5.572s2.439,5.572,5.448,5.572c3.01,0,5.449-2.495,5.449-5.572C426.604,592.371,424.165,589.876,421.155,589.876L421.155,589.876z M421.146,591.891c-1.916,0-3.47,1.589-3.47,3.549c0,1.959,1.554,3.548,3.47,3.548s3.469-1.589,3.469-3.548C424.614,593.479,423.062,591.891,421.146,591.891L421.146,591.891zM421.146,591.891',
-                onclick: this.onmouseup
-            },
-            myTool2: {
-                show: true,
-                title: '自定义扩展方法',
-                icon: 'image://https://echarts.apache.org/zh/images/favicon.png',
-                onclick: this.onmouseup
-            }
+          myTool1: {
+            show: true,
+            title: '画笔',
+            icon: 'path://M358.681,586.386s-90.968,49.4-94.488,126.827c-3.519,77.428-77.427,133.74-102.063,140.778s360.157,22.971,332.002-142.444l-135.45-125.16zM527.78,638.946c14.016,13.601,17.565,32.675,7.929,42.606-9.635,9.93-28.81,6.954-42.823-6.647l-92.767-88.518c-14.015-13.6-17.565-32.675-7.929-42.605,9.636-9.93,28.81-6.955,42.824,6.646l92.766,88.518zM849.514,173.863c-25.144-17.055-47.741-1.763-57.477,3.805-29.097,19.485-237.243,221.77-327.69,315.194-11.105,14.8-18.59,26.294,34.663,79.546,44.95,44.95,65.896,42.012,88.66,22.603,37.906-37.906,199.299-262.926,258.92-348.713,9.792-14.092,29.851-54.17,2.924-72.435z',
+            onclick: this.onClickPencil
+          },
+          myTool2: {
+            show: true,
+            title: '打点',
+
+            icon: 'path://M506.88,0C746.94656,0,941.7728,189.70624,942.08,424.1408c0,109.34272-43.4176,214.3232-121.0368,293.41696l-6.5536,6.51264L506.88,1024,199.2704,724.0704C120.36096,647.3728,71.68,541.3888,71.68,424.16128,71.68,189.70624,266.50624,0,506.88,0z,m0,153.6C351.35488,153.6,225.28,279.67488,225.28,435.2S351.35488,716.8,506.88,716.8,788.48,590.72512,788.48,435.2,662.40512,153.6,506.88,153.6z,m0,117.76a163.84,163.84,0,1,1,0,327.68,163.84,163.84,0,0,1,0-327.68z',
+            onclick: this.onClickDot
+          }
         }
-    },
+      },
       xAxis: {
         data: positions.map((position) => position.split(",")[0]),
         position: "top",
@@ -180,6 +193,7 @@ class Home extends React.PureComponent<any, any> {
     });
 
   }
+
   private renderLineChartB(positions) {
     this.lineChartB.setOption({
       title: {
@@ -350,6 +364,7 @@ class Home extends React.PureComponent<any, any> {
 
   }
 
+  // 键盘事件
   @keydown(LEFT)
   renderlLast() {
     this.setState({
@@ -384,45 +399,46 @@ class Home extends React.PureComponent<any, any> {
     })
   }
 
+  // 鼠标事件
   onmousedown = ({ event }) => {
-    if(!this.painting){
+    if (!this.state.mode) {
       return
     }
-   
+    this.painting = true
     let x = event.zrX;
     let y = event.zrY;
     this.lastPoint = { "x": x, "y": y };
-    const data = this.lineChartA.convertFromPixel('grid', [x, y]);
-    const index = data[0]
-    const value: number = data[1]
-    this.dataArray[index] = +value.toFixed(2)
-    let lastPosition
-    let nextPosition
-    for (let i = 0; i < index; i++) {
-      console.log('last：', this.dataArray[i])
-      if (!!this.dataArray[i]) {
-        lastPosition = { x: i, y: this.dataArray[i] }
+    if (this.state.mode === 'pencil') {
+      this.pencilTmp.push(this.lastPoint)
+    } else {
+      const data = this.lineChartA.convertFromPixel('grid', [x, y]);
+      const index = data[0]
+      const value: number = data[1]
+      this.dataArray[index] = +value.toFixed(2)
+      let lastPosition
+      let nextPosition
+      for (let i = 0; i < index; i++) {
+        if (!!this.dataArray[i]) {
+          lastPosition = { x: i, y: this.dataArray[i] }
+        }
+      }
+      for (let i = index + 1; i < this.state.dataSource.length; i++) {
+        if (!!this.dataArray[i]) {
+          nextPosition = { x: i, y: this.dataArray[i] }
+        }
+      }
+      //填补数据
+      if (lastPosition) {
+        for (let i = lastPosition.x + 1; i < index; i++) {
+          this.dataArray[i] = value - (((index - i) / (index - lastPosition.x)) * (value - lastPosition.y))
+        }
+      }
+      if (nextPosition) {
+        for (let i = index + 1; i <= nextPosition.x; i++) {
+          this.dataArray[i] = value - (((index - i) / (index - nextPosition.x)) * (value - nextPosition.y))
+        }
       }
     }
-    for (let i = index + 1; i < this.state.dataSource.length; i++) {
-      console.log('next:', this.dataArray[i])
-      if (!!this.dataArray[i]) {
-        nextPosition = { x: i, y: this.dataArray[i] }
-      }
-    }
-    //填补数据
-    if (lastPosition) {
-      for (let i = lastPosition.x + 1; i < index; i++) {
-        this.dataArray[i] = value - ( ((index - i)/(index - lastPosition.x))*(value-lastPosition.y))
-        console.log('add: ',i, ' ',this.dataArray[i])
-      }
-    }
-    if (nextPosition) {
-      for (let i = index + 1; i <= nextPosition.x; i++) {
-        this.dataArray[i] = value - ( ((index - i)/(index - nextPosition.x))*(value-nextPosition.y))
-      }
-    }
-    console.log(lastPosition, nextPosition, index)
     this.lineChartA.setOption({
       series: [
         {
@@ -432,38 +448,76 @@ class Home extends React.PureComponent<any, any> {
         }
       ]
     });
-    console.log(data)
-    this.drawCircle(x, y, 5);
+    this.drawPencil(x, y, 5);
   };
 
   onmousemove = ({ event }) => {
+    if (!this.state.mode) {
+      return
+    }
     if (this.painting) {
       let x = event.zrX;
       let y = event.zrY;
       let newPoint = { "x": x, "y": y };
-      this.drawLine(this.lastPoint.x, this.lastPoint.y, newPoint.x, newPoint.y);
+      if (this.state.mode === 'pencil') {
+        this.pencilTmp.push(newPoint)
+        this.drawLine(this.lastPoint.x, this.lastPoint.y, newPoint.x, newPoint.y);
+      } else {
+        this.drawLine(this.lastPoint.x, this.lastPoint.y, newPoint.x, newPoint.y);
+      }
+      this.zender.remove(this.pencile)
+      this.drawPencil(x, y, 5)
       this.lastPoint = newPoint;
+
     }
   };
 
   onmouseup = () => {
     this.painting = false;
-  }
-  // 画点函数
-  drawCircle = (x, y, radius) => {
-    console.log(x, y)
-    var circle = new Circle({
-      shape: {
-        cx: x,
-        cy: y,
-        r: radius
-      },
-      style: {
-        fill: 'none',
-        stroke: '#F00'
+    this.zender?.remove(this.pencile)
+    if (this.state.mode === 'pencil') {
+       // 清除line
+       this.pencilLine.forEach(line => {
+        this.zender.remove(line)
+      })
+      if (this.pencilTmp.length > 0) {
+        // 补划线
+        this.pencilTmp.forEach(position => {
+          const data = this.lineChartA.convertFromPixel('grid', [position.x, position.y]);
+          const index = data[0]
+          const value: number = data[1]
+          this.dataArray[index] = +value.toFixed(2)
+        })
+        this.lineChartA.setOption({
+          series: [
+            {
+              // 根据名字对应到相应的系列
+              name: "深度-1",
+              data: this.dataArray
+            }
+          ]
+        });
       }
-    });
-    this.zender.add(circle);
+
+      // 清除缓存
+      this.pencilLine = []
+      this.pencilTmp = []
+    }
+  }
+
+  // 画点函数
+
+  drawPencil = (x, y, radius) => {
+    console.log(x, y, path)
+    this.pencile = new Path(path.createFromString("M358.681 586.386s-90.968 49.4-94.488 126.827c-3.519 77.428-77.427 133.74-102.063 140.778s360.157 22.971 332.002-142.444l-135.45-125.16z m169.099 52.56c14.016 13.601 17.565 32.675 7.929 42.606-9.635 9.93-28.81 6.954-42.823-6.647l-92.767-88.518c-14.015-13.6-17.565-32.675-7.929-42.605 9.636-9.93 28.81-6.955 42.824 6.646l92.766 88.518z m321.734-465.083c-25.144-17.055-47.741-1.763-57.477 3.805-29.097 19.485-237.243 221.77-327.69 315.194-11.105 14.8-18.59 26.294 34.663 79.546 44.95 44.95 65.896 42.012 88.66 22.603 37.906-37.906 199.299-262.926 258.92-348.713 9.792-14.092 29.851-54.17 2.924-72.435z", {
+      style: {
+        fill: '#5AC2EE'
+      },
+    }));
+    const rect = this.pencile.getBoundingRect()
+    const m = rect.calculateTransform({ x: x - radius * 5, y: y - radius * 5, width: radius * 5, height: radius * 5 })
+    this.pencile.setLocalTransform(m)
+    this.zender.add(this.pencile);
   }
 
   drawLine = (x1, y1, x2, y2) => {
@@ -478,7 +532,22 @@ class Home extends React.PureComponent<any, any> {
         lineWidth: 3
       }
     })
+    this.pencilLine.push(line)
     this.zender.add(line);
+  }
+
+  // 点击画笔
+  onClickPencil = () => {
+    this.setState({
+      mode: this.state.mode === 'pencil' ? undefined : 'pencil'
+    })
+  }
+
+  // 点击画笔
+  onClickDot = () => {
+    this.setState({
+      mode: this.state.mode === 'dot' ? undefined : 'dot'
+    })
   }
 }
 export default Home;
