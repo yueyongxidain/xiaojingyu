@@ -137,7 +137,26 @@ class Home extends React.PureComponent<any, IState> {
         {
           name: "深度",
           type: "bar",
+          stack: 'A',
           data: positions.map((position) => position.split(",")[3]),
+          selectedMode: "single"
+        },
+        {
+          name: "增加",
+          type: "bar",
+          stack: 'A',
+          itemStyle: {
+            color: 'green'
+          },
+          selectedMode: "single"
+        },
+        {
+          name: "缩减",
+          type: "bar",
+          stack: 'A',
+          itemStyle: {
+            color: '#969596a8'
+          },
           selectedMode: "single"
         },
         {
@@ -476,8 +495,8 @@ class Home extends React.PureComponent<any, IState> {
     this.painting = false;
     this.zender?.remove(this.pencile)
     if (this.state.mode === 'pencil') {
-       // 清除line
-       this.pencilLine.forEach(line => {
+      // 清除line
+      this.pencilLine.forEach(line => {
         this.zender.remove(line)
       })
       if (this.pencilTmp.length > 0) {
@@ -488,13 +507,48 @@ class Home extends React.PureComponent<any, IState> {
           const value: number = data[1]
           this.dataArray[index] = +value.toFixed(2)
         })
+        // 计算增加和减少
+        const addDataSource = []
+        const delDataSource = []
+        const dataSource = []
+        this.state.dataSource.forEach((item, index) => {
+        console.log( index,this.dataArray,this.dataArray[index],!_.isUndefined(this.dataArray[index]))
+
+          const value = +item.split(",")[3]
+          if (!_.isUndefined(this.dataArray[index])) {
+           if(this.dataArray[index] > value) {
+            addDataSource.push(this.dataArray[index] - value)
+            delDataSource.push(0)
+            dataSource.push(value)
+           }else{
+            dataSource.push(this.dataArray[index])
+            addDataSource.push(0)
+            delDataSource.push(value - this.dataArray[index])
+           }
+          }else{
+            dataSource.push(value)
+            addDataSource.push(0)
+            delDataSource.push(0)
+          }
+        })
         this.lineChartA.setOption({
           series: [
             {
-              // 根据名字对应到相应的系列
+              name: "深度",
+              data: dataSource,
+            },
+            {
+              name: "增加",
+              data: addDataSource,
+            },
+            {
+              name: "缩减",
+              data: delDataSource,
+            },
+            {
               name: "深度-1",
-              data: this.dataArray
-            }
+              data: this.dataArray,
+            },
           ]
         });
       }
