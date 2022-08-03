@@ -5,7 +5,6 @@ import * as echarts from "echarts";
 import wgs, { translate } from "utils/wgs";
 import { isUndefined } from "lodash";
 import keydown, { Keys } from 'react-keydown';
-// import Circle from 'zrender/lib/graphic/shape/Circle'
 import Line from 'zrender/lib/graphic/shape/Line'
 import Path from 'zrender/lib/graphic/Path'
 import * as path from 'zrender/lib/tool/path'
