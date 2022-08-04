@@ -28,6 +28,10 @@ class Home extends React.PureComponent<any, IState> {
   private lastPoint = { x: undefined, y: undefined };
   private pencilTmp = []
   private pencilLine = []
+  private history = []
+  private historyIndex = 0
+  private startPoint
+  private endPoint
   state = {
     lineChartASelectedIndex: 0,
     lineChartBSelectedIndex: 0,
@@ -51,7 +55,6 @@ class Home extends React.PureComponent<any, IState> {
   }
   render() {
     const curPosition = this.state.dataSource.length > 0 ? this.state.dataSource[this.state.lineChartASelectedIndex].split(',') : undefined
-    console.log(curPosition)
     return (
       <div className="home">
         <div className="position">
@@ -70,10 +73,17 @@ class Home extends React.PureComponent<any, IState> {
           </div>
           <div className="toolbox">
             <span onClick={this.onClickPencil}>
-              <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5997" width="32" height="32"><path d="M358.681 586.386s-90.968 49.4-94.488 126.827c-3.519 77.428-77.427 133.74-102.063 140.778s360.157 22.971 332.002-142.444l-135.45-125.16z m169.099 52.56c14.016 13.601 17.565 32.675 7.929 42.606-9.635 9.93-28.81 6.954-42.823-6.647l-92.767-88.518c-14.015-13.6-17.565-32.675-7.929-42.605 9.636-9.93 28.81-6.955 42.824 6.646l92.766 88.518z m321.734-465.083c-25.144-17.055-47.741-1.763-57.477 3.805-29.097 19.485-237.243 221.77-327.69 315.194-11.105 14.8-18.59 26.294 34.663 79.546 44.95 44.95 65.896 42.012 88.66 22.603 37.906-37.906 199.299-262.926 258.92-348.713 9.792-14.092 29.851-54.17 2.924-72.435z" p-id="5998"></path></svg>
+
+              <svg fill={this.state.mode === 'pencil' ? "#1296db" : ''} viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5997" width="28" height="28"><path d="M358.681 586.386s-90.968 49.4-94.488 126.827c-3.519 77.428-77.427 133.74-102.063 140.778s360.157 22.971 332.002-142.444l-135.45-125.16z m169.099 52.56c14.016 13.601 17.565 32.675 7.929 42.606-9.635 9.93-28.81 6.954-42.823-6.647l-92.767-88.518c-14.015-13.6-17.565-32.675-7.929-42.605 9.636-9.93 28.81-6.955 42.824 6.646l92.766 88.518z m321.734-465.083c-25.144-17.055-47.741-1.763-57.477 3.805-29.097 19.485-237.243 221.77-327.69 315.194-11.105 14.8-18.59 26.294 34.663 79.546 44.95 44.95 65.896 42.012 88.66 22.603 37.906-37.906 199.299-262.926 258.92-348.713 9.792-14.092 29.851-54.17 2.924-72.435z" p-id="5998"></path></svg>
             </span>
             <span onClick={this.onClickRestore}>
-              <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7012" width="32" height="32"><path d="M567.342545 101.888c-67.537455 0-134.516364 16.802909-193.768727 48.546909a34.955636 34.955636 0 0 0 33.047273 61.579636 341.178182 341.178182 0 0 1 160.768-40.261818c187.624727 0 340.293818 152.622545 340.293818 340.293818s-152.622545 340.293818-340.293818 340.293819c-163.095273 0-299.613091-115.386182-332.567273-268.706909l46.545455 46.545454a34.816 34.816 0 0 0 49.338182 0 34.909091 34.909091 0 0 0 0-49.384727l-112.314182-112.314182a35.979636 35.979636 0 0 0-49.384728 0L56.785455 580.747636a34.909091 34.909091 0 1 0 49.384727 49.384728l56.273454-56.32c29.975273 196.840727 199.866182 348.299636 404.945455 348.299636 226.117818 0 410.065455-183.994182 410.065454-410.112 0-226.117818-183.947636-410.112-410.112-410.112z" p-id="7013"></path></svg>
+              <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7012" width="28" height="28"><path d="M567.342545 101.888c-67.537455 0-134.516364 16.802909-193.768727 48.546909a34.955636 34.955636 0 0 0 33.047273 61.579636 341.178182 341.178182 0 0 1 160.768-40.261818c187.624727 0 340.293818 152.622545 340.293818 340.293818s-152.622545 340.293818-340.293818 340.293819c-163.095273 0-299.613091-115.386182-332.567273-268.706909l46.545455 46.545454a34.816 34.816 0 0 0 49.338182 0 34.909091 34.909091 0 0 0 0-49.384727l-112.314182-112.314182a35.979636 35.979636 0 0 0-49.384728 0L56.785455 580.747636a34.909091 34.909091 0 1 0 49.384727 49.384728l56.273454-56.32c29.975273 196.840727 199.866182 348.299636 404.945455 348.299636 226.117818 0 410.065455-183.994182 410.065454-410.112 0-226.117818-183.947636-410.112-410.112-410.112z" p-id="7013"></path></svg>
+            </span>
+            <span onClick={this.onClickPre}>
+              <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7872" width="28" height="28"><path d="M967.111111 967.111111h-113.777778v-113.777778c0-221.866667-176.355556-398.222222-398.222222-398.222222H113.777778V341.333333h341.333333c284.444444 0 512 227.555556 512 512v113.777778z" fill="#0D1733" p-id="7873"></path><path d="M409.6 762.311111L51.2 398.222222 409.6 39.822222l85.333333 79.644445-284.444444 278.755555 284.444444 284.444445z" p-id="7874"></path></svg>
+            </span>
+            <span onClick={this.onClickNext}>
+              <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9188" width="28" height="28"><path d="M170.666667 967.111111H56.888889v-113.777778c0-284.444444 227.555556-512 512-512h341.333333v113.777778h-341.333333c-221.866667 0-398.222222 176.355556-398.222222 398.222222v113.777778z" fill="#0D1733" p-id="9189"></path><path d="M614.4 762.311111L529.066667 682.666667l284.444444-284.444445-284.444444-278.755555L614.4 39.822222 972.8 398.222222z" p-id="9190"></path></svg>
             </span>
           </div>
         </div>
@@ -249,8 +259,6 @@ class Home extends React.PureComponent<any, IState> {
       ],
     });
     this.lineChartB.on('selectchanged', (params) => {
-      console.log('lineChartB')
-      console.log(params)
       const { selected } = params
       const data = selected[0]
       if (!selected) {
@@ -276,7 +284,6 @@ class Home extends React.PureComponent<any, IState> {
         return
       }
       const data = batch[0]
-      console.log('lineChartB')
       this.lineChartA.dispatchAction({
         type: 'dataZoom',
         start: data.start,
@@ -299,7 +306,6 @@ class Home extends React.PureComponent<any, IState> {
       minY = isUndefined(minY) ? res.Y : minY > res.Y ? res.Y : minY
       maxY = isUndefined(maxY) ? res.Y : maxY < res.Y ? res.Y : maxY
     })
-    console.log(minY, maxY)
     this.scatterChartA.setOption({
       xAxis: {
         data: dataX
@@ -345,7 +351,6 @@ class Home extends React.PureComponent<any, IState> {
       if (!selected) {
         return
       }
-      console.log(data)
       const { dataIndex } = data
       if (+dataIndex === +this.state.scatterChartAelectedIndex) {
         return
@@ -411,47 +416,11 @@ class Home extends React.PureComponent<any, IState> {
     let x = event.zrX;
     let y = event.zrY;
     this.lastPoint = { "x": x, "y": y };
+    this.startPoint = this.lastPoint
     if (this.state.mode === 'pencil') {
       this.pencilTmp.push(this.lastPoint)
-    } else {
-      const data = this.lineChartA.convertFromPixel('grid', [x, y]);
-      const index = data[0]
-      const value: number = data[1]
-      this.dataArray[index] = +value.toFixed(2)
-      let lastPosition
-      let nextPosition
-      for (let i = 0; i < index; i++) {
-        if (!!this.dataArray[i]) {
-          lastPosition = { x: i, y: this.dataArray[i] }
-        }
-      }
-      for (let i = index + 1; i < this.state.dataSource.length; i++) {
-        if (!!this.dataArray[i]) {
-          nextPosition = { x: i, y: this.dataArray[i] }
-        }
-      }
-      //填补数据
-      if (lastPosition) {
-        for (let i = lastPosition.x + 1; i < index; i++) {
-          this.dataArray[i] = value - (((index - i) / (index - lastPosition.x)) * (value - lastPosition.y))
-        }
-      }
-      if (nextPosition) {
-        for (let i = index + 1; i <= nextPosition.x; i++) {
-          this.dataArray[i] = value - (((index - i) / (index - nextPosition.x)) * (value - nextPosition.y))
-        }
-      }
+      this.drawPencil(x, y, 5);
     }
-    this.lineChartA.setOption({
-      series: [
-        {
-          // 根据名字对应到相应的系列
-          name: "深度-1",
-          data: this.dataArray
-        }
-      ]
-    });
-    this.drawPencil(x, y, 5);
   };
 
   onmousemove = ({ event }) => {
@@ -465,18 +434,16 @@ class Home extends React.PureComponent<any, IState> {
       if (this.state.mode === 'pencil') {
         this.pencilTmp.push(newPoint)
         this.drawLine(this.lastPoint.x, this.lastPoint.y, newPoint.x, newPoint.y);
-      } else {
-        this.drawLine(this.lastPoint.x, this.lastPoint.y, newPoint.x, newPoint.y);
+        this.zender.remove(this.pencile)
+        this.drawPencil(x, y, 5)
+        this.lastPoint = newPoint;
       }
-      this.zender.remove(this.pencile)
-      this.drawPencil(x, y, 5)
-      this.lastPoint = newPoint;
-
     }
   };
 
   onmouseup = () => {
     this.painting = false;
+    this.endPoint = this.lastPoint
     this.zender?.remove(this.pencile)
     if (this.state.mode === 'pencil') {
       // 清除line
@@ -485,66 +452,19 @@ class Home extends React.PureComponent<any, IState> {
       })
       if (this.pencilTmp.length > 0) {
         // 补划线
-        this.pencilTmp.forEach(position => {
-          const data = this.lineChartA.convertFromPixel('grid', [position.x, position.y]);
-          const index = data[0]
-          const value: number = data[1]
-          this.dataArray[index] = +value.toFixed(2)
-        })
-        // 计算增加和减少
-        const addDataSource = []
-        const delDataSource = []
-        const dataSource = []
-        this.state.dataSource.forEach((item, index) => {
-          const value = +item.split(",")[3]
-          if (!_.isUndefined(this.dataArray[index])) {
-            if (this.dataArray[index] > value) {
-              addDataSource.push(this.dataArray[index] - value)
-              delDataSource.push(0)
-              dataSource.push(value)
-            } else {
-              dataSource.push(this.dataArray[index])
-              addDataSource.push(0)
-              delDataSource.push(value - this.dataArray[index])
-            }
-          } else {
-            dataSource.push(value)
-            addDataSource.push(0)
-            delDataSource.push(0)
-          }
-        })
-        this.lineChartA.setOption({
-          series: [
-            {
-              name: "深度",
-              data: dataSource,
-            },
-            {
-              name: "增加",
-              data: addDataSource,
-            },
-            {
-              name: "缩减",
-              data: delDataSource,
-            },
-            {
-              name: "深度-1",
-              data: this.dataArray,
-            },
-          ]
-        });
+        this.computeDataArray()
+        this.history.push({ pencilTmp: this.pencilTmp, startPoint: this.startPoint, endPoint: this.endPoint })
+        this.historyIndex = this.history.length - 1
       }
 
       // 清除缓存
-      this.pencilLine = []
-      this.pencilTmp = []
+      this.clearCache()
     }
   }
 
   // 画点函数
 
   drawPencil = (x, y, radius) => {
-    console.log(x, y, path)
     this.pencile = new Path(path.createFromString("M358.681 586.386s-90.968 49.4-94.488 126.827c-3.519 77.428-77.427 133.74-102.063 140.778s360.157 22.971 332.002-142.444l-135.45-125.16z m169.099 52.56c14.016 13.601 17.565 32.675 7.929 42.606-9.635 9.93-28.81 6.954-42.823-6.647l-92.767-88.518c-14.015-13.6-17.565-32.675-7.929-42.605 9.636-9.93 28.81-6.955 42.824 6.646l92.766 88.518z m321.734-465.083c-25.144-17.055-47.741-1.763-57.477 3.805-29.097 19.485-237.243 221.77-327.69 315.194-11.105 14.8-18.59 26.294 34.663 79.546 44.95 44.95 65.896 42.012 88.66 22.603 37.906-37.906 199.299-262.926 258.92-348.713 9.792-14.092 29.851-54.17 2.924-72.435z", {
       style: {
         fill: '#5AC2EE'
@@ -574,7 +494,6 @@ class Home extends React.PureComponent<any, IState> {
 
   // 点击画笔
   onClickPencil = (e) => {
-    console.log(e)
     e.stopPropagation()
     this.setState({
       mode: this.state.mode === 'pencil' ? undefined : 'pencil'
@@ -590,9 +509,127 @@ class Home extends React.PureComponent<any, IState> {
       type: 'restore'
     })
     this.lastPoint = { x: undefined, y: undefined };
+    this.clearCache()
+    this.dataArray = []
+    this.setState({
+      mode: undefined
+    })
+  }
+
+  // computeDataArray 计算数据
+  computeDataArray = () => {
+    this.pencilTmp.forEach(position => {
+      const data = this.lineChartA.convertFromPixel('grid', [position.x, position.y]);
+      const index = data[0]
+      const startData = this.lineChartA.convertFromPixel('grid', [this.startPoint.x, this.startPoint.y]);
+      const endData = this.lineChartA.convertFromPixel('grid', [this.endPoint.x, this.endPoint.y]);
+      const startIndex = startData[0]
+      const endIndex = endData[0]
+      console.log(startIndex, endIndex)
+      const value: number = data[1]
+      this.dataArray[index] = +value.toFixed(2)
+      let lastPosition
+      let nextPosition
+      for (let i = index - 1; i >= startIndex; i--) {
+        if (!!this.dataArray[i]) {
+          lastPosition = { x: i, y: this.dataArray[i] }
+          break
+        }
+      }
+      for (let i = index + 1; i <= endIndex; i++) {
+        if (!!this.dataArray[i]) {
+          nextPosition = { x: i, y: this.dataArray[i] }
+          break
+        }
+      }
+      //填补数据
+      if (lastPosition) {
+        for (let i = lastPosition.x + 1; i < index; i++) {
+          this.dataArray[i] = value - (((index - i) / (index - lastPosition.x)) * (value - lastPosition.y))
+        }
+      }
+      if (nextPosition) {
+        for (let i = index + 1; i <= nextPosition.x; i++) {
+          this.dataArray[i] = value - (((index - i) / (index - nextPosition.x)) * (value - nextPosition.y))
+        }
+      }
+    })
+    // 计算增加和减少
+    const addDataSource = []
+    const delDataSource = []
+    const dataSource = []
+    this.state.dataSource.forEach((item, index) => {
+      const value = +item.split(",")[3]
+      if (!_.isUndefined(this.dataArray[index])) {
+        if (this.dataArray[index] > value) {
+          addDataSource.push(this.dataArray[index] - value)
+          delDataSource.push(0)
+          dataSource.push(value)
+        } else {
+          dataSource.push(this.dataArray[index])
+          addDataSource.push(0)
+          delDataSource.push(value - this.dataArray[index])
+        }
+      } else {
+        dataSource.push(value)
+        addDataSource.push(0)
+        delDataSource.push(0)
+      }
+    })
+    this.lineChartA.setOption({
+      series: [
+        {
+          name: "深度",
+          data: dataSource,
+        },
+        {
+          name: "增加",
+          data: addDataSource,
+        },
+        {
+          name: "缩减",
+          data: delDataSource,
+        },
+        {
+          name: "深度-1",
+          data: this.dataArray,
+        },
+      ]
+    });
+  }
+
+  onClickPre = () => {
+    this.historyIndex -= 1
+    this.clearDataArray(this.startPoint,this.endPoint)
+    this.pencilTmp = this.history[this.historyIndex].pencilTmp
+    this.startPoint= this.history[this.historyIndex].startPoint
+    this.endPoint = this.history[this.historyIndex].endPoint
+    this.computeDataArray()
+  }
+
+
+  onClickNext = () => {
+    this.historyIndex += 1
+    this.pencilTmp = this.history[this.historyIndex].pencilTmp
+    this.startPoint= this.history[this.historyIndex].startPoint
+    this.endPoint = this.history[this.historyIndex].endPoint
+    console.log(this.pencilTmp)
+    this.computeDataArray()
+  }
+  // 清除页面缓存
+  clearCache() {
     this.pencilTmp = []
     this.pencilLine = []
-    this.dataArray =[]
+  }
+
+  clearDataArray  = (startPoint,endPoint)=>{
+    const startData = this.lineChartA.convertFromPixel('grid', [startPoint.x, startPoint.y]);
+    const endData = this.lineChartA.convertFromPixel('grid', [endPoint.x, endPoint.y]);
+    const startIndex = startData[0]
+    const endIndex = endData[0]
+    for(let i = startIndex;i<= endIndex;i++){
+      delete this.dataArray[i]
+    }
   }
 }
 export default Home;
