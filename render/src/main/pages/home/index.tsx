@@ -29,7 +29,7 @@ class Home extends React.PureComponent<any, IState> {
   private pencilTmp = []
   private pencilLine = []
   private history = []
-  private historyIndex = 0
+  private historyIndex = -1
   private startPoint
   private endPoint
   state = {
@@ -600,20 +600,19 @@ class Home extends React.PureComponent<any, IState> {
 
   onClickPre = () => {
     this.historyIndex -= 1
-    this.clearDataArray(this.startPoint,this.endPoint)
-    this.pencilTmp = this.history[this.historyIndex].pencilTmp
-    this.startPoint= this.history[this.historyIndex].startPoint
-    this.endPoint = this.history[this.historyIndex].endPoint
+    this.clearDataArray(this.startPoint, this.endPoint)
+    this.pencilTmp = this.history[this.historyIndex]?.pencilTmp || []
+    this.startPoint = this.history[this.historyIndex]?.startPoint
+    this.endPoint = this.history[this.historyIndex]?.endPoint
     this.computeDataArray()
   }
 
 
   onClickNext = () => {
     this.historyIndex += 1
-    this.pencilTmp = this.history[this.historyIndex].pencilTmp
-    this.startPoint= this.history[this.historyIndex].startPoint
+    this.pencilTmp = this.history[this.historyIndex]?.pencilTmp || []
+    this.startPoint = this.history[this.historyIndex].startPoint
     this.endPoint = this.history[this.historyIndex].endPoint
-    console.log(this.pencilTmp)
     this.computeDataArray()
   }
   // 清除页面缓存
@@ -622,12 +621,12 @@ class Home extends React.PureComponent<any, IState> {
     this.pencilLine = []
   }
 
-  clearDataArray  = (startPoint,endPoint)=>{
+  clearDataArray = (startPoint, endPoint) => {
     const startData = this.lineChartA.convertFromPixel('grid', [startPoint.x, startPoint.y]);
     const endData = this.lineChartA.convertFromPixel('grid', [endPoint.x, endPoint.y]);
     const startIndex = startData[0]
     const endIndex = endData[0]
-    for(let i = startIndex;i<= endIndex;i++){
+    for (let i = startIndex; i <= endIndex; i++) {
       delete this.dataArray[i]
     }
   }
