@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Route, HashRouter, Switch } from 'react-router-dom'
-import { AllMenu } from './global/menu'
+import { Route} from 'react-router-dom'
 import AppLayout from './layout/index'
 import './style.less'
 class App extends React.Component {
@@ -25,18 +24,8 @@ class App extends React.Component {
   }
   render() {
     return (
-      <HashRouter>
-        <Switch>
-          <Route
-            path="/"
-            component={() => (
-              <AppLayout>
-                {AllMenu.map((ele) => this.mergeRouer(ele, ''))}
-              </AppLayout>
-            )}
-          ></Route>
-        </Switch>
-      </HashRouter>
+      <AppLayout>
+      </AppLayout>
     )
   }
 }

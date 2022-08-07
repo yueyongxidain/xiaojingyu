@@ -3,7 +3,7 @@
     "name": "yueyong",
     "email": "yueyong@supremind.com"
   },
-  "name": "supre_ant",
+  "name": "xianjingyu",
   "version": "1.0.0-alpha",
   "private": true,
   "main": ".Main/main.js",
@@ -17,6 +17,7 @@
     "lodash": "^4.17.15",
     "mime-types": "^2.1.27",
     "moment": "^2.29.1",
+    "mousetrap": "^1.6.5",
     "normalize-url": "^5.3.0",
     "request": "^2.88.2",
     "yamljs": "^0.3.0"
@@ -35,8 +36,8 @@
     "zip": "cd ../app/win-unpacked/resources && zip -r ../../../supremindNetDist_app.zip app && cd -"
   },
   "build": {
-    "appId": "com.supremind.supreAnt.app",
-    "productName": "SupreAnt",
+    "appId": "com.xianjingyu.app",
+    "productName": "xianjingyu",
     "directories": {
       "buildResources": "../.buildResources",
       "output": "../app"
@@ -56,12 +57,12 @@
     "files": "",
     "extraResources": [
       {
-        "from": "../.Render/",
-        "to": "app/.Render/"
-      },
-      {
         "from": "../.Main/",
         "to": "app/.Main/"
+      },
+      {
+        "from": "../.Render/",
+        "to": "app/.Main/.Render/"
       }
     ]
   },

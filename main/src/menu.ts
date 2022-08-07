@@ -1,4 +1,5 @@
 import { app, dialog, Menu } from 'electron'
+import { createSettingWindow } from './window/setting'
 
 const isMac = process.platform === 'darwin'
 export class GlobalMenu {
@@ -55,21 +56,27 @@ export class GlobalMenu {
       filters: [{ name: 'txt/csv', extensions: ['txt', 'csv'] }],
       properties: ['openFile']
     })
-    console.log(filePathResult.filePaths)
     global.fileCenter.readFile(filePathResult.filePaths[0])
+    global.fileCenter.saveHistory(
+      filePathResult.filePaths[0],
+      undefined,
+      undefined,
+      undefined
+    )
   }
 
   private saveFile() {
     if (!this.instance) {
       return
     }
-    console.log('保存文件')
+    global.fileCenter.getHistory()
   }
 
   private saveAs() {
     if (!this.instance) {
       return
     }
+    createSettingWindow(undefined, {})
     console.log('另存为')
   }
 }

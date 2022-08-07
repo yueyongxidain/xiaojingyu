@@ -1,8 +1,6 @@
-import { app, BrowserWindow, clipboard, Menu } from 'electron'
+import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
 import * as url from 'url'
-import * as Store from 'electron-store'
-const store = new Store()
 
 // 操作窗口
 function createMainWindow() {
@@ -11,12 +9,7 @@ function createMainWindow() {
   }
   Menu.setApplicationMenu(null)
   // 检测剪切板是否存在可疑的任务
-  const clipText = clipboard.readText() || ''
-  const files = clipText.match(/(http|https)\:\/\/\S+_illegal_info.json/)
-  let hash = `#${store.get('history')}`
-  if (files && files.length > 0) {
-    hash = `#/transferList/download`
-  }
+  const hash = `#`
   const window = new BrowserWindow({
     width: 1020,
     height: 647,
@@ -49,9 +42,18 @@ function createMainWindow() {
         slashes: true
       })
     )
+    // window.webContents.openDevTools()
   } else {
     // 开发测试
     window.loadURL(`http://localhost:3000/main.html${hash}`)
+    // window.loadURL(
+    //   url.format({
+    //     pathname: path.join(__dirname, '../../../.Render/main.html'), // 注意这里修改
+    //     hash,
+    //     protocol: 'file:',
+    //     slashes: true
+    //   })
+    // )
     window.webContents.openDevTools()
   }
   global.mainWindow = window

@@ -12,33 +12,34 @@
     display: flex;
     flex-direction: row;
 
-    .app-menu-0 {
-      padding: 12px;
-      overflow: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      width: @menuWidth;
-      height: 100%;
-      box-shadow: 2px 0px 5px #eeeeee;
-
-      .app-menu-item {
-        text-align: center;
-        height: @menuHeight;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 400;
-      }
-
-      .app-menu-item-selected {
-        color: #3366cc;
-      }
-    }
-
     .app-body {
       flex: 1;
       height: 100%;
       padding: 12px;
+
+      .item {
+        margin: 12px;
+        display: flex;
+      }
+
+      .label {
+        display: inline-block;
+        text-align: right;
+        width: 164px;
+      }
+
+      .submit {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button{
+          width: 86px;
+          background: #8787ec;
+          height: 32px;
+          border-radius: 4px;
+        }
+      }
     }
 
     .app-footer {

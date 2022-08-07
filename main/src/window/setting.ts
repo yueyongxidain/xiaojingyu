@@ -9,12 +9,12 @@ function createSettingWindow(parent, point, hash?, search?) {
   }
   Menu.setApplicationMenu(null)
   const window = new BrowserWindow({
-    width: 480,
-    height: 342,
+    width: 342,
+    height: 240,
     ...point,
     fullscreen: false,
     fullscreenable: false,
-    title: '用户设置',
+    title: '数据导出',
     autoHideMenuBar: true,
     resizable: false,
     parent: global.mainWindow,
@@ -25,6 +25,7 @@ function createSettingWindow(parent, point, hash?, search?) {
         : path.join(__dirname, '../../render/public/favicon.ico')),
     webPreferences: {
       nodeIntegration: true, // 集成 Nodejs
+      preload: path.join(__dirname, './preload.js'),
       devTools: true
     },
     minimizable: false,

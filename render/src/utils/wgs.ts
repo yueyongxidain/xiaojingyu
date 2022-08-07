@@ -21,7 +21,7 @@ function BLHtoXYZ (RE,data){
     let X = (N+H)*Math.cos(B*d2r)*Math.cos(L*d2r);
     let Y = (N+H)*Math.cos(B*d2r)*Math.sin(L*d2r);
     let Z = (N*(1-e2)+H)*Math.sin(B*d2r);
-    let result = {X:X,Y:Y,Z:Z};     //将结果保存到result对象中
+    let result = {X:+X.toFixed(2),Y:+Y.toFixed(2),Z:+Z.toFixed(2)};     //将结果保存到result对象中
     return result;
 }
 

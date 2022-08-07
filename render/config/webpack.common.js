@@ -9,6 +9,7 @@ const isDev = process.env.npm_lifecycle_event !== 'prod'
 config = {
     entry: {
         main: './src/main/index.tsx',
+        setting: './src/setting/index.tsx',
     },
     output: {
         path: path.resolve(__dirname, '../../.Render'),

@@ -1,4 +1,4 @@
-import { app, Menu } from 'electron'
+import { app, ipcMain, Menu, Notification } from 'electron'
 import { FileCenter } from './fileCenter'
 import * as _ from 'lodash'
 import { GlobalMenu } from './menu'
@@ -78,6 +78,37 @@ class SupreAntApp {
 
   private registeFileCenter() {
     global.fileCenter = new FileCenter()
+    ipcMain.on('export', (event, params) => {
+      global.fileCenter.getDataFromRender(params)
+    })
+
+    ipcMain.on('sendDataSource', (event, params) => {
+      try {
+        const filePath = global.fileCenter.saveAs(params)
+        new Notification({
+          title: '导出成功',
+          body: `文件存储到：${filePath}`
+        }).show()
+        global.settingWindow.webContents.send('finishExport')
+      } catch (err) {
+        new Notification({
+          title: '导出失败',
+          body: `失败信息：${err.message}`
+        }).show()
+        global.settingWindow.webContents.send('errorExport')
+      }
+
+      // TODO 通知导出页面 完成导出
+    })
+
+    ipcMain.on('getReOpen', (event, params) => {
+      global.fileCenter.reOpen()
+    })
+
+    ipcMain.on('sendHistory', (event, params) => {
+      const { dataArray, dataSource, history } = params
+      global.fileCenter.saveHistory(undefined, dataArray, history, dataSource)
+    })
   }
 
   /**
