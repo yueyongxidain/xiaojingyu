@@ -14,18 +14,14 @@ function createMainWindow() {
     width: 1020,
     height: 647,
     resizable: false,
-    autoHideMenuBar: true,
     minimizable: true,
     show: false,
-    titleBarStyle: 'hidden',
     icon:
       process.platform !== 'darwin' &&
       (!!app.isPackaged
         ? path.join(__dirname, '../.Render/favicon.ico')
         : path.join(__dirname, '../../render/public/favicon.ico')),
     title: '小鲸鱼',
-    transparent: false,
-    frame: false,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       nodeIntegration: true, // 集成 Nodejs
