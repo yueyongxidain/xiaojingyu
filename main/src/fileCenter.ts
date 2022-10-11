@@ -5,6 +5,7 @@ import * as path from 'path'
 import * as Store from 'electron-store'
 
 interface IConfig {
+  downloadPath: string
   lastFilePath?: string
   lastDatarray?: number[]
   lastHostory?: any[]
@@ -15,6 +16,7 @@ export class FileCenter {
   public instance: this
   private lastExportParams
   private store: Store<IConfig>
+  private fileTitle = '编号,X,Y,深度,GPS高程,GPS状态'
   constructor() {
     this.store = new Store({
       name: 'config'
@@ -22,10 +24,13 @@ export class FileCenter {
   }
 
   public readFile(filePath: string) {
-    const content = fs.readFileSync(filePath, { encoding: 'utf-8' })
+    const lastFilePath = this.store.get('lastFilePath')
+    if (filePath !== lastFilePath) {
+      this.save(filePath, [], [], [])
+    }
+    const content = fs.readFileSync(filePath, { encoding: 'utf8' })
     const positions = content.toString().split('\r\n')
-    const title = positions.shift()
-    console.log(title)
+    positions.shift()
     this.sendToRender(positions)
   }
 
@@ -40,31 +45,38 @@ export class FileCenter {
 
   public saveAs(data) {
     const { dataSource = [], dataArray = [] } = data
-    console.log(dataSource, dataArray)
+    const downloadPath = this.store.get('downloadPath')
     const { mime, interval, gpsStatus } = this.lastExportParams
-    const content = []
+    const content = [this.fileTitle]
     let curInterval = 0
     dataSource.forEach((d, index) => {
       const arr = d.split(',')
       arr[3] = dataArray[index] || arr[3]
-      if (+arr[arr.length - 1] === gpsStatus && curInterval === 0) {
+      if (
+        (+arr[arr.length - 1] === gpsStatus || gpsStatus === 0) &&
+        curInterval === 0
+      ) {
         content.push(arr.join(','))
       }
       curInterval++
-      if (curInterval > interval) {
+      if (curInterval > interval - 1) {
         curInterval = 0
       }
     })
     const filePath = path.join(
-      app.getPath('downloads'),
+      downloadPath || app.getPath('downloads'),
       moment().format('YYYYMMDDHHmmss') + (mime === 'CSV' ? '.csv' : '.txt')
     )
     // TODO 更具数据参数存储到文件
-    fs.writeFileSync(filePath, content.join('\r\n'))
+    fs.writeFileSync(
+      filePath,
+      (mime === 'CSV' ? `\ufeff` : '') + content.join('\r\n'),
+      { encoding: 'utf8' }
+    )
     return filePath
   }
 
-  public saveHistory(lastFilePath, lastDatarray, lastHostory, lastDataSource) {
+  public save(lastFilePath, lastDatarray, lastHostory, lastDataSource) {
     if (lastFilePath) {
       this.store.set('lastFilePath', lastFilePath)
     }
@@ -74,7 +86,6 @@ export class FileCenter {
     if (lastHostory) {
       this.store.set('lastHostory', lastHostory)
     }
-    console.log(lastDataSource)
     if (lastDataSource) {
       this.store.set('lastDataSource', lastDataSource)
     }
@@ -97,6 +108,15 @@ export class FileCenter {
     global.mainWindow.webContents.send('getHistory')
   }
 
+  public getDownloadPath() {
+    const downloadPath =
+      this.store.get('downloadPath') || app.getPath('downloads')
+    return downloadPath
+  }
+
+  public setDownloadPath(downloadPath) {
+    this.store.set('downloadPath', downloadPath)
+  }
   public sendHistoryToRender(params) {
     global.mainWindow.webContents.send('sendHistoryToRender', params)
   }

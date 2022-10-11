@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Route} from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import AppLayout from './layout/index'
 import './style.less'
 class App extends React.Component {
@@ -23,10 +23,7 @@ class App extends React.Component {
     }
   }
   render() {
-    return (
-      <AppLayout>
-      </AppLayout>
-    )
+    return <AppLayout></AppLayout>
   }
 }
 

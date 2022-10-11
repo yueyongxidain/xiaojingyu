@@ -2,20 +2,20 @@ import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'
 import * as url from 'url'
 // 设置窗口
-function createSettingWindow(parent, point, hash?, search?) {
+function createSettingWindow() {
   if (global.settingWindow) {
     global.settingWindow.restore()
     return
   }
+  const hash = `#`
   Menu.setApplicationMenu(null)
   const window = new BrowserWindow({
-    width: 342,
-    height: 240,
-    ...point,
+    width: 438,
+    height: 300,
     fullscreen: false,
     fullscreenable: false,
     title: '数据导出',
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     resizable: false,
     parent: global.mainWindow,
     icon:
@@ -37,14 +37,11 @@ function createSettingWindow(parent, point, hash?, search?) {
         pathname: path.join(__dirname, '../.Render/setting.html'), // 注意这里修改
         protocol: 'file:',
         hash,
-        search,
         slashes: true
       })
     )
   } else {
-    window.loadURL(
-      `http://localhost:3000/setting.html${hash || ''}${search || ''}`
-    )
+    window.loadURL(`http://localhost:3000/setting.html${hash}`)
     window.webContents.openDevTools()
   }
   global.settingWindow = window

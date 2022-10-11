@@ -10,19 +10,92 @@
   padding-left: @titleBarIconsWidth;
   padding-right: 24px;
   height: @appHeaderHeight;
-  background-color: #aa7b7b;
+  background-color: rgb(94, 122, 232);
 
   .button_group {
     display: flex;
+    width: 100%;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 450px;
     position: relative;
     z-index: 999;
 
-    >div {
+    /* 下拉按钮样式 */
+    .dropbtn {
+      width: 28px;
+      height: 28px;
+      margin: 12px;
+      background: url(../../../../assets/文件.svg);
+      background-size: 100% 100%;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
       cursor: pointer;
+    }
+
+    /* 容器 <div> - 需要定位下拉内容 */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* 下拉内容 (默认隐藏) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 下拉菜单的链接 */
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    /* 鼠标移上去后修改下拉菜单链接颜色 */
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* 在鼠标移上去后显示下拉菜单 */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* 当下拉内容显示后修改下拉按钮的背景颜色 */
+    .dropdown:hover .dropbtn {
+      width: 28px;
+      height: 28px;
+      margin: 12px;
+    }
+
+    > div {
+      cursor: pointer;
+    }
+
+    .logo {
+      width: 42px;
+      height: 32px;
+      margin: 8px 18px 8px 0px;
+      background: url(../../../../assets/logo.png);
+      background-size: 100% 100%;
+      position: absolute;
+      left: -60px;
+    }
+
+    .appName {
+      position: absolute;
+      left: -10px;
+      font-size: 18px;
+      color: #111111;
+      font-family: cursive;
+      font-weight: 900;
     }
 
     .left_button {
@@ -65,40 +138,28 @@
       background-size: 100% 100%;
     }
 
-    .del_button{
+    .del_button {
       width: 28px;
       height: 28px;
       margin: 12px;
       background: url(../../../../assets/删除.svg);
       background-size: 100% 100%;
     }
-    .del_button_selected{
+
+    .del_button_selected {
       width: 28px;
       height: 28px;
       margin: 12px;
       background: url(../../../../assets/删除_selected.svg);
       background-size: 100% 100%;
     }
-    .move_button_selected{
+
+    .move_button_selected {
       width: 24px;
       height: 24px;
       margin: 12px;
       background: url(../../../../assets/移动_selected.svg);
       background-size: 100% 100%;
-    }
-  }
-
-  .toolbox {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 450px;
-    position: relative;
-    z-index: 999;
-
-    >div {
-      cursor: pointer;
     }
 
     .pre_step {
@@ -132,6 +193,7 @@
       background: url(../../../../assets/编辑.svg);
       background-size: 100% 100%;
     }
+
     .pencil_selected {
       width: 28px;
       height: 28px;
@@ -139,6 +201,16 @@
       background: url(../../../../assets/编辑_selected.svg);
       background-size: 100% 100%;
     }
+  }
+
+  .toolbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 450px;
+    position: relative;
+    z-index: 999;
   }
 }
 
@@ -167,7 +239,6 @@
       height: 100%;
       width: 100%;
     }
-
   }
 
   .line {
@@ -180,7 +251,7 @@
       top: 60%;
       left: 50%;
 
-      >div {
+      > div {
         display: inline-block;
         margin: 0 28px;
 
@@ -192,7 +263,6 @@
           color: aqua;
         }
       }
-
     }
 
     .line-a {

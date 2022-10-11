@@ -15,6 +15,8 @@ function createMainWindow() {
     height: 647,
     resizable: false,
     minimizable: true,
+    autoHideMenuBar: true,
+    titleBarStyle: 'hiddenInset',
     show: false,
     icon:
       process.platform !== 'darwin' &&
@@ -42,14 +44,6 @@ function createMainWindow() {
   } else {
     // 开发测试
     window.loadURL(`http://localhost:3000/main.html${hash}`)
-    // window.loadURL(
-    //   url.format({
-    //     pathname: path.join(__dirname, '../../../.Render/main.html'), // 注意这里修改
-    //     hash,
-    //     protocol: 'file:',
-    //     slashes: true
-    //   })
-    // )
     window.webContents.openDevTools()
   }
   global.mainWindow = window

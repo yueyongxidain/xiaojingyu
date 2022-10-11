@@ -1,4 +1,4 @@
-import { app, ipcMain, Menu, Notification } from 'electron'
+import { app, dialog, ipcMain, Notification } from 'electron'
 import { FileCenter } from './fileCenter'
 import * as _ from 'lodash'
 import { GlobalMenu } from './menu'
@@ -82,6 +82,22 @@ class SupreAntApp {
       global.fileCenter.getDataFromRender(params)
     })
 
+    ipcMain.on('getDownloadPath', (event, params) => {
+      const downloadPath = global.fileCenter.getDownloadPath(params)
+      global.settingWindow.webContents.send('downloadPath', { downloadPath })
+    })
+
+    ipcMain.on('showSaveAs', async (event, params) => {
+      const filePathResult = await dialog.showOpenDialog(global.mainWindow, {
+        title: '选择数据文件夹',
+        properties: ['openDirectory']
+      })
+      global.fileCenter.setDownloadPath(filePathResult.filePaths[0])
+      global.settingWindow.webContents.send('downloadPath', {
+        downloadPath: filePathResult.filePaths[0]
+      })
+    })
+
     ipcMain.on('sendDataSource', (event, params) => {
       try {
         const filePath = global.fileCenter.saveAs(params)
@@ -116,7 +132,7 @@ class SupreAntApp {
    */
   private registeMenu() {
     const globalMenu = new GlobalMenu()
-    Menu.setApplicationMenu(globalMenu.instance)
+    return globalMenu
   }
 }
 const supreAnt = new SupreAntApp()

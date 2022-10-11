@@ -53,10 +53,7 @@ export const TopMenu: IMenu[] = [
     icon: 'home',
     component: dynamicWrapper(() => import('../pages/home'))
   }
-  
 ]
 
-export const BottomMenu: IMenu[] = [
- 
-]
+export const BottomMenu: IMenu[] = []
 export const AllMenu = TopMenu.concat(BottomMenu)

@@ -167,7 +167,6 @@ export function openBrowerTo(url) {
   remote.shell.openExternal(url)
 }
 
-
 export function humanizeSize(bytes: number) {
   bytes = bytes * 1
   if (bytes === undefined || bytes === null) {

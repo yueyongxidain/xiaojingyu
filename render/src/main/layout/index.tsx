@@ -4,11 +4,10 @@ import * as _ from 'lodash'
 import Home from 'main/pages/home'
 
 class AppLayout extends React.Component<any, any> {
-
   render() {
     return (
       <div className="app">
-          <Home />
+        <Home />
       </div>
     )
   }

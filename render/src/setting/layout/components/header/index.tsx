@@ -11,9 +11,7 @@ class AppHeader extends React.Component<
 > {
   state = { user: undefined, popoverVisible: false }
   popoverRef = React.createRef<HTMLDivElement>()
-  componentDidMount() {
-  
-  }
+  componentDidMount() {}
   render() {
     const { user, popoverVisible } = this.state
     const level = USER_LEVEL.SOLDIERANT
@@ -34,9 +32,7 @@ class AppHeader extends React.Component<
                   <div className="app-user-popover-userinfo-icon"></div>
                   <div className="app-user-popover-action">
                     <div>{user?.fullname}</div>
-                    <div
-                      className="app-user-popover-action-logOut"
-                    >
+                    <div className="app-user-popover-action-logOut">
                       退出登陆
                     </div>
                   </div>
@@ -60,10 +56,7 @@ class AppHeader extends React.Component<
             )}
           </div>
           <div className="app-help" title="帮助"></div>
-          <div
-            className="app-setting"
-            title="设置"
-          ></div>
+          <div className="app-setting" title="设置"></div>
         </div>
       </div>
     )

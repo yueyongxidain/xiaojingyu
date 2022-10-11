@@ -4,7 +4,7 @@
     "email": "yueyong@supremind.com"
   },
   "name": "xianjingyu",
-  "version": "1.0.0-alpha",
+  "version": "1.0.9-alpha",
   "private": true,
   "main": ".Main/main.js",
   "dependencies": {
